@@ -1,0 +1,132 @@
+---
+title: "PISA analysis"
+author: "Leo Bastos"
+date: "13/12/2019"
+output: 
+  html_document:
+    code_folding: "hide"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+```
+
+
+# PISA evolution (?) through time 
+
+The dataset was obtained from the PISA International Data Explorer. http://pisadataexplorer.oecd.org
+
+There is no country (or region with a clear improve), I decided to emphasize Brazil and UK.
+
+```{r time_plot, fig.keep=T, fig.width=10}
+
+pisa <- readxl::read_xls("../Data/PISA2000-2018.xls") 
+
+pisa %>% filter( !is.na(Average) ) %>% mutate(Year.j = jitter(as.numeric(Year))) %>%  ggplot(aes(x = Year.j, y = Average, group = Jurisdiction )) + 
+  geom_point() + 
+  geom_line() + 
+  geom_point(data = . %>% filter(Jurisdiction == "Brazil"), 
+             mapping = aes(x = Year.j, y = Average), col = "green") + 
+  geom_ribbon(data = . %>% filter(Jurisdiction == "Brazil"), 
+             mapping = aes(x = Year.j, 
+                           ymin = Average - 2 * `Standard Error`,
+                           ymax = Average + 2 * `Standard Error`), 
+             alpha = 0.3,
+             fill = "green") + 
+  geom_point(data = . %>% filter(Jurisdiction == "United Kingdom"), 
+             mapping = aes(x = Year.j, y = Average), col = "red") + 
+  geom_ribbon(data = . %>% filter(Jurisdiction == "United Kingdom"), 
+             mapping = aes(x = Year.j, 
+                           ymin = Average - 2 * `Standard Error`,
+                           ymax = Average + 2 * `Standard Error`), 
+             alpha = 0.3,
+             fill = "red") + 
+    theme_bw(base_size = 14) +
+  scale_x_continuous(name = "Year", breaks = c(2000, 2003, 2006, 2009, 2012, 2015, 2018)) + 
+  facet_wrap(~Subject, scales = "free_x")
+
+```
+
+
+
+# PISA averages per country  by subject and year {.tabset .tabset-fade}
+
+
+```{r reading, results='hide'}
+
+tbl.sub.year <- pisa %>% filter(Year > 2014) %>%  group_by(Subject, Year) %>% summarise(n = n())
+
+index.list <- 1:nrow(tbl.sub.year)
+
+pw.list <- lapply(index.list, 
+                 function(x){
+                   data.aux <- pisa %>% filter( Subject == tbl.sub.year$Subject[x] & Year == tbl.sub.year$Year[x] & !is.na(Average))  %>%
+                     mutate( Jurisdiction = fct_reorder(Jurisdiction, Average))
+                   
+                   data.aux %>% ggplot(aes(y = Average, x = Jurisdiction, 
+                                           ymin = Average - 2 * `Standard Error`, 
+                                           ymax = Average + 2 * `Standard Error`)) + 
+                     geom_point() + geom_linerange() + 
+                     geom_point(data = data.aux %>% filter( Jurisdiction == "Brazil"),
+                                mapping = aes(y = Average, x = Jurisdiction),
+                                color = "green") +
+                     geom_linerange(data = data.aux %>% filter( Jurisdiction == "Brazil"),
+                                    mapping = aes(x = Jurisdiction,
+                                                  ymin = Average - 2 * `Standard Error`,
+                                                  ymax = Average + 2 * `Standard Error`),
+                                    color = "green") +
+                     ggtitle(label = tbl.sub.year$Subject[x], subtitle = tbl.sub.year$Year[x]) + 
+                     theme_bw(base_size = 14) + 
+                     scale_x_discrete("") + 
+                     coord_flip()
+                 } 
+)
+```
+
+
+## 2018 {.tabset .tabset-fade} 
+
+### Mathematics
+
+```{r , fig.height=20, fig.width=10}
+pw.list[[2]]
+```
+
+### Reading
+
+```{r , fig.height=20, fig.width=10}
+pw.list[[4]]
+```
+
+### Sciences
+
+```{r , fig.height=20, fig.width=10}
+pw.list[[6]]
+```
+
+
+
+## 2015 {.tabset .tabset-fade} 
+
+### Mathematics
+
+```{r , fig.height=20, fig.width=10}
+pw.list[[1]]
+```
+
+### Reading
+
+```{r , fig.height=20, fig.width=10}
+pw.list[[3]]
+```
+
+### Sciences
+
+```{r , fig.height=20, fig.width=10}
+pw.list[[5]]
+```
+
+
+
