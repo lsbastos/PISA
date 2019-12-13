@@ -1,31 +1,13 @@
----
-title: "PISA analysis"
-author: "Leo Bastos"
-date: "13/12/2019"
-output:
-  md_document:
-    variant: markdown_github
-# output: 
-#   html_document:
-#     code_folding: "hide"
+PISA evolution (?) through time
+===============================
 
----
+The dataset was obtained from the PISA International Data Explorer.
+<a href="http://pisadataexplorer.oecd.org" class="uri">http://pisadataexplorer.oecd.org</a>
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
+There is no country (or region with a clear improve), I decided to
+emphasize Brazil and UK.
 
-```
-
-
-# PISA evolution (?) through time 
-
-The dataset was obtained from the PISA International Data Explorer. http://pisadataexplorer.oecd.org
-
-There is no country (or region with a clear improve), I decided to emphasize Brazil and UK.
-
-```{r time_plot, fig.keep=T, fig.width=10}
-
+``` r
 pisa <- readxl::read_xls("../Data/PISA2000-2018.xls") 
 
 pisa %>% filter( !is.na(Average) ) %>% mutate(Year.j = jitter(as.numeric(Year))) %>%  ggplot(aes(x = Year.j, y = Average, group = Jurisdiction )) + 
@@ -50,16 +32,14 @@ pisa %>% filter( !is.na(Average) ) %>% mutate(Year.j = jitter(as.numeric(Year)))
     theme_bw(base_size = 14) +
   scale_x_continuous(name = "Year", breaks = c(2000, 2003, 2006, 2009, 2012, 2015, 2018)) + 
   facet_wrap(~Subject, scales = "free_x")
-
 ```
 
+![](pisa_files/figure-markdown_github/time_plot-1.png)
 
+PISA averages per country by subject and year
+=============================================
 
-# PISA averages per country  by subject and year {.tabset .tabset-fade}
-
-
-```{r reading, results='hide'}
-
+``` r
 tbl.sub.year <- pisa %>% filter(Year > 2014) %>%  group_by(Subject, Year) %>% summarise(n = n())
 
 index.list <- 1:nrow(tbl.sub.year)
@@ -89,48 +69,56 @@ pw.list <- lapply(index.list,
 )
 ```
 
-
-## 2018 {.tabset .tabset-fade} 
+2018
+----
 
 ### Mathematics
 
-```{r , fig.height=20, fig.width=10}
+``` r
 pw.list[[2]]
 ```
 
+![](pisa_files/figure-markdown_github/unnamed-chunk-1-1.png)
+
 ### Reading
 
-```{r , fig.height=20, fig.width=10}
+``` r
 pw.list[[4]]
 ```
 
+![](pisa_files/figure-markdown_github/unnamed-chunk-2-1.png)
+
 ### Sciences
 
-```{r , fig.height=20, fig.width=10}
+``` r
 pw.list[[6]]
 ```
 
+![](pisa_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
-
-## 2015 {.tabset .tabset-fade} 
+2015
+----
 
 ### Mathematics
 
-```{r , fig.height=20, fig.width=10}
+``` r
 pw.list[[1]]
 ```
 
+![](pisa_files/figure-markdown_github/unnamed-chunk-4-1.png)
+
 ### Reading
 
-```{r , fig.height=20, fig.width=10}
+``` r
 pw.list[[3]]
 ```
 
+![](pisa_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
 ### Sciences
 
-```{r , fig.height=20, fig.width=10}
+``` r
 pw.list[[5]]
 ```
 
-
-
+![](pisa_files/figure-markdown_github/unnamed-chunk-6-1.png)
