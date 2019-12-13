@@ -1,10 +1,10 @@
 # PISA
 
-Analysis of PISA data 
+A very simple analysis of PISA data.
 
-## Data
+The data contains the average (and sd) score of PISA (Program for International Student Assessment) from students by several countries thoughout the world. The last result is from 2018 and it happens since 2000. 
 
-The data in the folder Data contains the PISA (Program for International Student Assessment) results for all OECD countries 
+The data is available in the folder Data, it was downloaded from the PISA  results for all OECD countries 
 
-Organization for Economic Cooperation and Development (OECD)|Program for International Student Assessment (PISA)|This report was generated using the PISA International Data Explorer. http://pisadataexplorer.oecd.org
+Scripts and some Fiugres are available at folder R (https://github.com/lsbastos/PISA/blob/master/R/pisa.md)
 

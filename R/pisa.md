@@ -1,8 +1,15 @@
-PISA evolution (?) through time
-===============================
+PISA
+====
 
-The dataset was obtained from the PISA International Data Explorer.
-<a href="http://pisadataexplorer.oecd.org" class="uri">http://pisadataexplorer.oecd.org</a>
+The dataset was obtained from the PISA International Data Explorer
+(<a href="http://pisadataexplorer.oecd.org" class="uri">http://pisadataexplorer.oecd.org</a>).
+I edit the data in a way it would be easier to load it in R, both files
+the original one downloaded from the PISA website and the edited one are
+available at
+<a href="https://github.com/lsbastos/PISA/" class="uri">https://github.com/lsbastos/PISA/</a>
+
+PISA evolution (?) through time
+-------------------------------
 
 There is no country (or region with a clear improve), I decided to
 emphasize Brazil and UK.
